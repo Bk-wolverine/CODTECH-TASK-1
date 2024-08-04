@@ -1,0 +1,51 @@
+/*PASSWORD STRENGTH CHECKER USING PYTHON*/
+import re
+
+def password_strength(password):
+
+    length_criteria = len(password) >= 12
+    lowercase_criteria = bool(re.search(r'[a-z]', password))
+    uppercase_criteria = bool(re.search(r'[A-Z]', password))
+    digit_criteria = bool(re.search(r'\d', password))
+    special_char_criteria = bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
+    no_common_patterns = not bool(re.search(r'(password|1234|qwerty|abcd|admin)', password, re.IGNORECASE))
+    criteria_met = sum([
+        length_criteria,
+        lowercase_criteria,
+        uppercase_criteria,
+        digit_criteria,
+        special_char_criteria,
+        no_common_patterns
+    ])
+    feedback = []
+    if not length_criteria:
+        feedback.append("Password should be at least 12 characters long.")
+    if not lowercase_criteria:
+        feedback.append("Password should include at least one lowercase letter.")
+    if not uppercase_criteria:
+        feedback.append("Password should include at least one uppercase letter.")
+    if not digit_criteria:
+        feedback.append("Password should include at least one digit.")
+    if not special_char_criteria:
+        feedback.append("Password should include at least one special character.")
+    if not no_common_patterns:
+        feedback.append("Password should not contain common patterns or easily guessable words.")
+    if criteria_met == 6:
+        strength = "Very Strong"
+    elif criteria_met == 5:
+        strength = "Strong"
+    elif criteria_met == 4:
+        strength = "Moderate"
+    elif criteria_met == 3:
+        strength = "Weak"
+    else:
+        strength = "Very Weak"
+
+    return strength, feedback
+password = input("Enter a password to check its strength: ")
+strength, feedback = password_strength(password)
+print(f"The password strength is: {strength}")
+if feedback:
+    print("Suggestions to improve your password:")
+    for suggestion in feedback:
+        print(f"- {suggestion}")
